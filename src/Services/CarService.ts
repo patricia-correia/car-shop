@@ -2,6 +2,9 @@ import Car from '../Domains/Car';
 import ICar from '../Interfaces/ICar';
 import { ICarODM } from '../Models/CarODM';
 
+const MESSAGE_422 = 'Invalid mongo id';
+const MESSAGE_404 = 'Car not found';
+
 class CarService {
   constructor(
     private carODM: ICarODM,
@@ -39,14 +42,27 @@ class CarService {
 
   public async findById(id: string) {
     if (!this.isValidID(id)) {
-      return { status: 422, message: 'Invalid mongo id' };
+      return { status: 422, message: MESSAGE_422 };
     }
 
     const car = await this.carODM.findById(id);
     if (car) {
       return { status: 200, message: this.createCarDomain(car) };
     }
-    return { status: 404, message: 'Car not found' };
+    return { status: 404, message: MESSAGE_404 };
+  }
+
+  public async update(id: string, carObject: ICar) {
+    if (!this.isValidID(id)) return { status: 422, message: MESSAGE_422 };
+
+    const updateCar = await this.carODM.findById(id);
+    const carUpdate = this.createCarDomain(updateCar);
+
+    if (carUpdate) {
+      await this.carODM.update(id, carObject);
+      return { status: 200, message: { id, ...carObject } };
+    }
+    return { status: 404, message: MESSAGE_404 };
   }
 }
 

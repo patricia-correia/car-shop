@@ -5,6 +5,7 @@ export interface ICarODM {
   create(car: ICar): Promise<ICar>
   find(): Promise<ICar[]>
   findById(id: string): Promise<ICar | null>
+  update(id: string, carObject: ICar): Promise<void>
 }
 
 class CarODM implements ICarODM {
@@ -34,6 +35,10 @@ class CarODM implements ICarODM {
 
   public async findById(id: string): Promise<ICar | null> {
     return this.model.findById(id);
+  }
+
+  public async update(id: string, carObject: ICar): Promise<void> {
+    await this.model.findByIdAndUpdate(id, carObject);
   }
 }
 
