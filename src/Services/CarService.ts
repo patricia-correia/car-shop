@@ -1,13 +1,13 @@
 import Car from '../Domains/Car';
 import ICar from '../Interfaces/ICar';
-import { ICarODM } from '../Models/CarODM';
+import CarODM from '../Models/CarODM';
 
 const MESSAGE_422 = 'Invalid mongo id';
 const MESSAGE_404 = 'Car not found';
 
 class CarService {
   constructor(
-    private carODM: ICarODM,
+    private carODM: CarODM,
   ) {}
 
   private createCarDomain(car: ICar | null): Car | null {
