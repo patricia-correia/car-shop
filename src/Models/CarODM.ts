@@ -3,6 +3,8 @@ import ICar from '../Interfaces/ICar';
 
 export interface ICarODM {
   create(car: ICar): Promise<ICar>
+  find(): Promise<ICar[]>
+  findById(id: string): Promise<ICar | null>
 }
 
 class CarODM implements ICarODM {
@@ -24,6 +26,14 @@ class CarODM implements ICarODM {
 
   public async create(car: ICar): Promise<ICar> {
     return this.model.create({ ...car });
+  }
+
+  public async find(): Promise<ICar[]> {
+    return this.model.find();
+  }
+
+  public async findById(id: string): Promise<ICar | null> {
+    return this.model.findById(id);
   }
 }
 
