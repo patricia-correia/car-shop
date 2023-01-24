@@ -41,4 +41,17 @@ describe('Deve listar os carros', function () {
 
     sinon.restore();
   });
+
+  it('Deve retornar o carro de acordo com o id', async function () {
+    const carOutput: Car = new Car(inputArray[0]);
+
+    sinon.stub(Model, 'findById').resolves(carOutput);
+
+    const service = new CarService(new CarODM());
+    const result = await service.findById('63cfc8758e22e4884d1bc0ce');
+
+    expect(result.message).to.be.deep.equal(carOutput);
+
+    sinon.restore();
+  });
 });

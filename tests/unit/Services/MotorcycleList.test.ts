@@ -28,8 +28,8 @@ const inputArray = [
   },
 ];
 
-describe('Deve listar os carros', function () {
-  it('Deve listar todos os carros cadastrados', async function () {
+describe('Deve listar os motos', function () {
+  it('Deve listar todos os motos cadastrados', async function () {
     const motorcycleOutput = inputArray.map((motorcycle) => new Motorcycle(motorcycle));
 
     sinon.stub(Model, 'find').resolves(motorcycleOutput);
@@ -38,6 +38,18 @@ describe('Deve listar os carros', function () {
     const result = await service.find();
 
     expect(result).to.be.deep.equal(motorcycleOutput);
+
+    sinon.restore();
+  });
+  it('Deve retornar o motos de acordo com o id', async function () {
+    const motorcycleOutput: Motorcycle = new Motorcycle(inputArray[0]);
+
+    sinon.stub(Model, 'findById').resolves(motorcycleOutput);
+
+    const service = new MotorcycleService(new MotorcycleODM());
+    const result = await service.findById('63cfd1438e22e4884d1bc0d3');
+
+    expect(result.message).to.be.deep.equal(motorcycleOutput);
 
     sinon.restore();
   });
