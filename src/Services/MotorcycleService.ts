@@ -2,6 +2,9 @@ import Motorcycle from '../Domains/Motorcycle';
 import IMotorcycle from '../Interfaces/IMotorcycle';
 import MotorcycleODM from '../Models/MotorcycleODM';
 
+const MESSAGE_422 = 'Invalid mongo id';
+const MESSAGE_404 = 'Motorcycle not found';
+
 class MotorcycleService {
   constructor(
     private motorcycleODM: MotorcycleODM,
@@ -29,6 +32,24 @@ class MotorcycleService {
     }
     const newMotorcycle = await this.motorcycleODM.create(motorcycle);
     return this.createMotorcycleDomain(newMotorcycle);
+  }
+
+  public async find() {
+    const showList = await this.motorcycleODM.find();
+    const arrayList = showList.map((motorcycle) => this.createMotorcycleDomain(motorcycle));
+    return arrayList;
+  }
+
+  public async findById(id: string) {
+    if (!this.isValidID(id)) {
+      return { status: 422, message: MESSAGE_422 };
+    }
+
+    const motorcycle = await this.motorcycleODM.findById(id);
+    if (motorcycle) {
+      return { status: 200, message: this.createMotorcycleDomain(motorcycle) };
+    }
+    return { status: 404, message: MESSAGE_404 };
   }
 }
 
